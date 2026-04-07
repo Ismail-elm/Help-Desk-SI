@@ -1,0 +1,48 @@
+{% extends "tickets/base.html" %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Tableau de bord</p>
+        <h1 class="section-title">Gestion des tickets SAP</h1>
+        <p class="intro">Suivez les demandes du service informatique, analysez les priorités et changez rapidement le statut des tickets.</p>
+    </div>
+    <a class="btn" href="{% url 'creer_ticket' %}">Créer un ticket</a>
+</div>
+
+<div class="stats-grid">
+    {% for label, count, stat_class in stats_display %}
+    <div class="stat-card {{ stat_class }}">
+        <span class="stat-label">{{ label }}</span>
+        <span class="stat-value">{{ count }}</span>
+    </div>
+    {% endfor %}
+</div>
+
+<section class="ticket-list">
+    <h2>Tickets récents</h2>
+    {% if tickets %}
+    <div class="ticket-grid">
+        {% for ticket in tickets %}
+        <article class="ticket-card">
+            <a class="ticket-link" href="{% url 'detail_ticket' ticket.pk %}">
+                <div class="ticket-card-head">
+                    <div>
+                        <p class="ticket-module">{{ ticket.get_module_sap_display }}</p>
+                        <h3>{{ ticket.titre }}</h3>
+                    </div>
+                    <div class="ticket-card-meta">
+                        <span class="badge badge-{{ ticket.priorite }}">{{ ticket.get_priorite_display }}</span>
+                        <span class="badge badge-{{ ticket.statut }}">{{ ticket.get_statut_display }}</span>
+                    </div>
+                </div>
+                <p class="ticket-description">{{ ticket.description|truncatechars:120 }}</p>
+                <p class="ticket-date">Créé le {{ ticket.date_creation|date:"d/m/Y" }}</p>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Aucun ticket trouvé. Créez un nouveau ticket pour démarrer le suivi.</div>
+    {% endif %}
+</section>
+{% endblock %}

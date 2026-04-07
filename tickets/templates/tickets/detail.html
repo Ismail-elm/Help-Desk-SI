@@ -1,0 +1,42 @@
+<!-- tickets/templates/tickets/detail.html -->
+{% extends "tickets/base.html" %}
+{% block content %}
+
+<a class="link-secondary" href="{% url 'liste_tickets' %}">← Retour</a>
+
+<div class="card details-card">
+    <div class="details-header">
+        <div>
+            <p class="ticket-module">{{ ticket.get_module_sap_display }}</p>
+            <h2>{{ ticket.titre }}</h2>
+            <p class="ticket-meta">Créé le {{ ticket.date_creation|date:"d/m/Y à H:i" }} — Modifié le {{ ticket.date_modification|date:"d/m/Y à H:i" }}</p>
+        </div>
+        <div class="details-meta">
+            <span class="badge badge-{{ ticket.priorite }}">{{ ticket.get_priorite_display }}</span>
+            <span class="badge badge-{{ ticket.statut }}">{{ ticket.get_statut_display }}</span>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ticket-section">
+        <p><strong>Module SAP :</strong> {{ ticket.get_module_sap_display }}</p>
+        <p class="ticket-body">{{ ticket.description }}</p>
+    </div>
+
+    <hr class="divider">
+
+    <form method="post" action="{% url 'modifier_statut' ticket.pk %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="statut">Changer le statut :</label>
+            <select id="statut" name="statut">
+                {% for val, label in ticket.STATUT_CHOICES %}
+                <option value="{{ val }}" {% if ticket.statut == val %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success btn-sm">Mettre à jour</button>
+    </form>
+</div>
+{% endblock %}

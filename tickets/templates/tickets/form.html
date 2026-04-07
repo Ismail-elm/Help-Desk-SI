@@ -1,0 +1,32 @@
+<!-- tickets/templates/tickets/form.html -->
+{% extends "tickets/base.html" %}
+{% block content %}
+
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Formulaire de ticket</p>
+        <h1 class="section-title">{{ action }} un ticket</h1>
+        <p class="intro">Renseignez les informations nécessaires pour créer ou mettre à jour une demande SAP.</p>
+    </div>
+    <a class="btn btn-secondary" href="{% url 'liste_tickets' %}">Retour au tableau</a>
+</div>
+
+<div class="card form-card">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <p class="field-error">{{ field.errors|striptags }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn">{{ action }}</button>
+            <a class="link-secondary" href="{% url 'liste_tickets' %}">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
